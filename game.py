@@ -1,16 +1,18 @@
+from globals import *
+from math import sqrt
 class Game:
     """One game."""
-    def __init__(self, MOV, oppName, oppRating, home, day):
+    def __init__(self, MOV, isWon, oppName, oppRating, home, day):
         """Initialize the game."""
         self.MOV = MOV
         self.day = day
-        self.isWon = MOV > 0
+        self.isWon = isWon
         self.home = home
         self.oppName = oppName
         self.oppRating = oppRating
         self.rating = self.calculateGameRating()
 
-    def calculateGameRating():
+    def calculateGameRating(self):
         """Calculate rating for protagonist team."""
         oppR = self.oppRating
         if oppR >= 0:
@@ -20,7 +22,7 @@ class Game:
 
         else:
             ratingCoef = -sqrt(abs(oppR))
-
+        
         if self.isWon:
             rating = (ratingCoef * OPP_RATING_WEIGHT) + WIN_BOOST + sqrt(self.MOV)
         else:
