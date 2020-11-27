@@ -182,6 +182,7 @@ class League:
 			newRatings.append(new)
 		for c,t in enumerate(self.teams):
 			t.statRating = newRatings[c]
+			t.rating = t.calculateRating()
 
 	def normalizeSeasonRatings(self):
 		"""Normalize season ratings to standard distribution."""
