@@ -1,6 +1,7 @@
 from team import Team
 from game import Game
 from statistics import mean, stdev
+import csv
 from globals import *
 
 class League:
@@ -12,6 +13,7 @@ class League:
 		self.createTeams()
 		self.normalizeWeightStats()
 		self.normalizeStatRatings()
+		self.normalizeSOS()
 
 	def readScores(self):
 		f = open("Scores.txt", 'r')
@@ -68,32 +70,40 @@ class League:
 				team.addGame(g)
 
 		self.normalizeSeasonRatings()
-
+ 
 	def createTeams(self):
 		"""Create all teams and initialize ratings."""
 		t = open("Teams.txt", 'r')
-		o = open("oStats.txt", 'r')
-		d = open("dStats.txt", 'r')
-		p = open("PreseasonRatings.txt", 'r')
+		o = open("oStats.csv", 'r')
+		d = open("dStats.csv", 'r')
+		p = open("PreseasonRatings.csv", 'r')
 		oStatsTotals = []
 		dStatsTotals = []
 		teams = t.read().splitlines()
-		preRatings = p.read().splitlines()
+		preReader = csv.reader(p)
+		preRatings = [x[1] for x in preReader]
+		oList = list(csv.reader(o))
+		dList = list(csv.reader(d))
 
 		for count,ele in enumerate(teams):
 			if count == NUM_TEAMS:
 				break
+			if ele in NOT_PLAYING:
+				continue
+
+			sos = float(oList[count][1])
+			oLine = oList[count][2:]
+			dLine = dList[count][2:]
+
 			self.teamNames.append(ele)
 			oStats = []
 			dStats = []
-			oLine = o.readline()
-			dLine = d.readline()
-			for i in oLine.split():
+			for i in oLine:
 				oStats.append(float(i))
 			
-			for i in dLine.split():
+			for i in dLine:
 				dStats.append(float(i))
-			team = Team(ele, float(preRatings[count]), oStats, dStats)
+			team = Team(ele, float(preRatings[count]), oStats, dStats, sos)
 			self.teams.append(team)
 
 		t.close()
@@ -113,7 +123,7 @@ class League:
 				string += "\t"
 
 			string += "\t" + str(t.rating) + "\t\t" + str(t.wins) + "\t\t" + str(t.losses) + "\t\t" + \
-								str(t.statRating) + "\t\t" + str(t.seasonRating)
+								str(t.statRating) + "\t\t" + str(t.seasonRating) + "\t\t" + str(t.SOS)
 
 			print(string)
 
@@ -201,6 +211,22 @@ class League:
 
 		for c,t in enumerate(self.teams):
 			t.seasonRating = newRatings[c]
+
+	def normalizeSOS(self):
+		sos = []
+		for t in self.teams:
+			sos.append(t.SOS)
+		
+		avg = mean(sos)
+		dev = stdev(sos)
+
+		newSos = []
+		for s in sos:
+			new = (s - avg) / dev
+			newSos.append(new)
+		for c,t  in enumerate(self.teams):
+			t.SOS = newSos[c]
+			t.rating = t.calculateRating()
 
 	def normalizeWeightStats(self):
 		"""Normalize oStats and dStats to standard distribution, then weigh them."""

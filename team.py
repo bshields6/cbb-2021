@@ -2,11 +2,12 @@
 from  globals import *
 class Team:
     """The team."""
-    def __init__(self, name, preRating, oStats, dStats):
+    def __init__(self, name, preRating, oStats, dStats, SOS):
         self.name = name
         self.statRating = 0
         self.seasonRating = 0
         self.preseasonRating = preRating
+        self.SOS = SOS
         self.GP = 0
         self.wins = 0
         self.losses = 0
@@ -17,7 +18,7 @@ class Team:
 
     def calculateRating(self):
         """Calculate the team's rating."""
-        rar = self.statRating * STAT_WEIGHT + self.seasonRating * GAME_WEIGHT  + self.preseasonRating * PRESEASON_WEIGHT
+        rar = self.statRating * STAT_WEIGHT + self.seasonRating * GAME_WEIGHT  + self.preseasonRating * PRESEASON_WEIGHT + self.SOS * SOS_WEIGHT
         return rar
 
     def addGame(self, g):
