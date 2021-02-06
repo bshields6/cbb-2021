@@ -20,7 +20,15 @@ class League:
 		lines = f.read().splitlines()
 		f.close()
 		count = 0
+		#iowa = self.teams[130]
+		michigan = self.teams[175]
 		for line in range(0, len(lines), 2):
+			if self.day % 100 == 6:
+				#print("MICHIGAN GAME RATING  ", michigan.seasonRating)
+				#print("MICHIGAN GP  ", michigan.GP)
+				#print("MICHIGAN GAME RATING  ", michigan.seasonRating)
+				#print("MICHIGAN GP  ", michigan.GP)
+				self.normalizeSeasonRatings()
 			self.day += 1
 			#get two lines at once because two teams in game
 			str1 = lines[count]
@@ -70,6 +78,10 @@ class League:
 				team.addGame(g)
 
 		self.normalizeSeasonRatings()
+		
+		#iowa.printGames()
+		
+		michigan.printGames()
  
 	def createTeams(self):
 		"""Create all teams and initialize ratings."""
@@ -115,6 +127,7 @@ class League:
 		"""Print teams in order of rating."""
 		sortedTeams = sorted(self.teams, key=lambda x: x.rating, reverse=True)
 
+		print('Team\t\t\t\t\tRating\t\t\t\tWins\tLosses\t\t\tStat\t\t\tSeason\t\t\t\t\tSOS')
 		for t in sortedTeams:
 			string = t.name
         	#for alignment
@@ -211,6 +224,7 @@ class League:
 
 		for c,t in enumerate(self.teams):
 			t.seasonRating = newRatings[c]
+			t.rating = t.calculateRating()
 
 	def normalizeSOS(self):
 		sos = []

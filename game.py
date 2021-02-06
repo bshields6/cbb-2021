@@ -33,6 +33,6 @@ class Game:
                 rating -= ROAD_BOOST
             else:
                 rating += ROAD_BOOST
-        dayCoef = sqrt((self.day / 1000) + 1)
-        rating *= dayCoef
+        #dayCoef = sqrt((self.day / 1000) + 1)
+        #rating *= dayCoef
         return rating
