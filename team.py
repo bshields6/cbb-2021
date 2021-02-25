@@ -13,6 +13,7 @@ class Team:
         self.losses = 0
         self.rating = 0
         self.games = []
+        self.adjustedGameRatings = []
         self.oStats = oStats
         self.dStats = dStats
 
@@ -29,14 +30,20 @@ class Team:
         else:
             self.losses += 1
         self.games.append(g)
-        #change seasonRating to new average of all game ratings
-        total = (self.seasonRating * self.GP) + g.rating
+        #change seasonRating to new weighted average of all game ratings
+        ratings = [x.rating for x in self.games]
+        total = 0
+        self.adjustedGameRatings = []
+        for c,i in enumerate(ratings):
+            coef = 10*(c+1) / (self.GP**2)
+            self.adjustedGameRatings.append(i*coef)
+            total += i*coef
         self.seasonRating = total / self.GP
         self.rating = self.calculateRating()
 
     def printGames(self):
         """Print games. In progress."""
-        with open('output.txt', 'w') as file:
+        with open('output.txt', 'a') as file:
             file.write("TEAM NAME:" + self.name + "-----------------\n\n")
             for c,g in enumerate(self.games):
                 file.write(g.oppName + '\n')
@@ -48,3 +55,4 @@ class Team:
                 file.write("day: " + str(g.day) + '\n')
                 file.write("Game Rating:" + str(g.rating))
                 file.write('\n\n\n')
+                file.write("~~~~~~~~~~~~~ADJUSTED GAME RATING!~~~~~~~~~~~~:"+ str(self.adjustedGameRatings[c]) +  '\n\n\n\n')

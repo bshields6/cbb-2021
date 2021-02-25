@@ -10,7 +10,8 @@ class Game:
         self.home = home
         self.oppName = oppName
         self.oppRating = oppRating
-        self.rating = self.calculateGameRating()
+        self.rating, rawRating = self.calculateGameRating()
+        
 
     def calculateGameRating(self):
         """Calculate rating for protagonist team."""
@@ -33,6 +34,8 @@ class Game:
                 rating -= ROAD_BOOST
             else:
                 rating += ROAD_BOOST
-        #dayCoef = sqrt((self.day / 1000) + 1)
-        #rating *= dayCoef
-        return rating
+
+        rawRating = rating
+        recencyCoef = 1
+        rating *= recencyCoef
+        return rating, rawRating

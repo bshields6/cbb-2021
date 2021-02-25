@@ -20,7 +20,7 @@ class League:
 		lines = f.read().splitlines()
 		f.close()
 		count = 0
-		#iowa = self.teams[130]
+		rutgers = self.teams[252]
 		michigan = self.teams[175]
 		for line in range(0, len(lines), 2):
 			if self.day % 100 == 6:
@@ -79,7 +79,7 @@ class League:
 
 		self.normalizeSeasonRatings()
 		
-		#iowa.printGames()
+		rutgers.printGames()
 		
 		michigan.printGames()
  
@@ -127,7 +127,7 @@ class League:
 		"""Print teams in order of rating."""
 		sortedTeams = sorted(self.teams, key=lambda x: x.rating, reverse=True)
 
-		print('Team\t\t\t\t\tRating\t\t\t\tWins\tLosses\t\t\tStat\t\t\tSeason\t\t\t\t\tSOS')
+		#print('Team\t\t\t\t\tRating\t\t\t\tWins\tLosses\t\t\tStat\t\t\tSeason\t\t\t\t\tSOS')
 		for t in sortedTeams:
 			string = t.name
         	#for alignment
